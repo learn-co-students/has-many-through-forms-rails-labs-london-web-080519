@@ -1,1 +1,39 @@
+<h1>Post Details</h1>
+<h3><%= @post.title %></h3>
+<p><%= @post.content %></p>
+<h4>Categories:</h4>
+<ul>
+    <% @post.categories.each do |category| %>
+      <li><%= category.name %></li>
+    <% end %>
+</ul>
 
+<h4>Write a comment below:</h4>
+<%= form_for(@comment) do |f| %>
+    <%= f.hidden_field :post_id, value: @post.id %>
+    <%= f.label :content %>        
+    <%= f.text_area :content %> <br>       
+    <%= f.label :user_id %>        
+    <%= f.collection_select :user_id, User.all, :id, :username %> <br>
+    <%= f.fields_for :user, User.new do |u_f| %>
+        <%= u_f.label :username %>
+        <%= u_f.text_field :username %>
+    <% end %>
+    <%= f.submit %>
+<% end %>
+  
+  
+
+<h4>Comments:</h4>
+<ul>
+    <% @post.comments.each do |comment| %>
+      <li><%= comment.user.username %> says: <%= comment.content %></li>
+    <% end %>
+</ul>
+
+<h4>Users who have commented:</h4>
+<ul>
+    <% @post.users.uniq.each do |user| %>
+      <li><%= link_to user.username, user %></li>
+    <% end %>
+</ul>
